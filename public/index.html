@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1 Million Checkboxes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          #0f0e1e 0%,
+          #1a1628 25%,
+          #1f1840 50%,
+          #161a2f 75%,
+          #0d0f25 100%
+        );
+        min-height: 100vh;
+        color: #4a4a6a;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            circle at 20% 50%,
+            rgba(200, 150, 200, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 50%,
+            rgba(100, 150, 200, 0.08) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      h1 {
+        text-align: center;
+        padding: 40px 20px 20px;
+        font-size: 3.5em;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          #ffc0cb 0%,
+          #b0e0e6 50%,
+          #dda0dd 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 0 25px rgba(255, 182, 193, 0.4))
+          drop-shadow(0 0 15px rgba(173, 216, 230, 0.3));
+        letter-spacing: 3px;
+        animation:
+          fadeInDown 0.8s ease-out,
+          glowPulse 3s ease-in-out infinite;
+      }
+
+      @keyframes glowPulse {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 25px rgba(255, 182, 193, 0.4))
+            drop-shadow(0 0 15px rgba(173, 216, 230, 0.3));
+        }
+        50% {
+          filter: drop-shadow(0 0 35px rgba(255, 182, 193, 0.6))
+            drop-shadow(0 0 20px rgba(173, 216, 230, 0.5));
+        }
+      }
+
+      #container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+        gap: 15px;
+        padding: 40px;
+        max-width: 1200px;
+        margin: 30px auto;
+        background: linear-gradient(
+          135deg,
+          #0f0e1e 0%,
+          #1a1628 25%,
+          #1f1840 50%,
+          #161a2f 75%,
+          #0d0f25 100%
+        );
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        position: relative;
+        box-shadow:
+          0 0 40px rgba(255, 182, 193, 0.5),
+          0 0 80px rgba(173, 216, 230, 0.4),
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          inset 0 1px 20px rgba(255, 255, 255, 0.05);
+        animation: fadeInUp 0.8s ease-out 0.2s backwards;
+      }
+
+      #container::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 30px;
+        padding: 2px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 182, 193, 0.7) 0%,
+          rgba(173, 216, 230, 0.7) 50%,
+          rgba(221, 160, 221, 0.7) 100%
+        );
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        animation: borderGlow 3s ease-in-out infinite;
+      }
+
+      @keyframes borderGlow {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        position: relative;
+        border-radius: 12px;
+        border: 2px solid rgba(255, 182, 193, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 182, 193, 0.3) 0%,
+          rgba(255, 218, 185, 0.3) 100%
+        );
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow:
+          0 4px 20px rgba(255, 182, 193, 0.2),
+          0 0 15px rgba(255, 182, 193, 0.1),
+          inset 0 1px 3px rgba(255, 255, 255, 0.4);
+      }
+
+      input[type="checkbox"]:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 182, 193, 0.6) 0%,
+          rgba(255, 218, 185, 0.6) 100%
+        );
+        border-color: rgba(255, 182, 193, 0.9);
+        box-shadow:
+          0 6px 25px rgba(255, 182, 193, 0.4),
+          0 0 20px rgba(255, 182, 193, 0.2),
+          inset 0 1px 3px rgba(255, 255, 255, 0.6);
+        transform: translateY(-4px) scale(1.05);
+      }
+
+      input[type="checkbox"]:active {
+        transform: translateY(-1px) scale(0.98);
+      }
+
+      input[type="checkbox"]:checked {
+        background: linear-gradient(
+          135deg,
+          rgba(135, 206, 235, 0.9) 0%,
+          rgba(186, 212, 206, 0.9) 100%
+        );
+        border-color: rgba(135, 206, 235, 1);
+        box-shadow:
+          0 6px 30px rgba(135, 206, 235, 0.5),
+          0 0 25px rgba(135, 206, 235, 0.3),
+          inset 0 1px 3px rgba(255, 255, 255, 0.8);
+        animation: checkPulse 0.5s ease-out;
+      }
+
+      input[type="checkbox"]:checked::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgba(255, 255, 255, 1);
+        font-size: 28px;
+        font-weight: bold;
+        text-shadow: 0 2px 8px rgba(100, 180, 200, 0.5);
+      }
+
+      input[type="checkbox"]:focus-visible {
+        outline: none;
+        border-color: rgba(200, 100, 200, 1);
+        box-shadow:
+          0 0 0 3px rgba(200, 100, 200, 0.3),
+          0 6px 25px rgba(200, 150, 200, 0.3),
+          0 0 20px rgba(200, 100, 200, 0.2),
+          inset 0 1px 3px rgba(255, 255, 255, 0.6);
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes checkPulse {
+        0% {
+          transform: scale(0.9);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .error-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 100, 100, 0.9) 0%,
+          rgba(255, 150, 150, 0.9) 100%
+        );
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 100, 100, 0.8);
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        box-shadow:
+          0 8px 32px rgba(255, 100, 100, 0.4),
+          0 0 20px rgba(255, 100, 100, 0.3);
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 1000;
+        max-width: 400px;
+        word-wrap: break-word;
+      }
+
+      .error-notification.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .error-notification::before {
+        content: "⚠️";
+        font-size: 24px;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CHECKBOXES</h1>
+    <div id="container"></div>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      const socket = io();
+      const container = document.getElementById("container");
+      const CHECKBOX_COUNT = 100;
+
+      function showError(message) {
+        // Remove any existing error notifications
+        const existingError = document.querySelector(".error-notification");
+        if (existingError) {
+          existingError.remove();
+        }
+
+        // Create new error notification
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error-notification";
+        errorDiv.textContent = message;
+
+        // Add to body
+        document.body.appendChild(errorDiv);
+
+        // Show with animation
+        setTimeout(() => {
+          errorDiv.classList.add("show");
+        }, 10);
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          errorDiv.classList.remove("show");
+          setTimeout(() => {
+            if (errorDiv.parentNode) {
+              errorDiv.parentNode.removeChild(errorDiv);
+            }
+          }, 500);
+        }, 5000);
+      }
+
+      socket.on("server:error", (data) => {
+        const errorMessage = data.error;
+        showError(errorMessage);
+      });
+      socket.on(`server:checkbox:change`, (data) => {
+        console.log(`Socket server event`, data);
+        const { index, checked } = data;
+        const input = document.getElementById(`checkbox-${index}`);
+        if (input) {
+          input.checked = checked;
+        }
+      });
+
+      async function fetchStateFromServer(){
+        let initialized = false;
+        if (initialized) return;
+        initialized = true;
+
+        const response = await fetch("/checkboxes", { method: "GET" });
+        const data = await response.json();
+        if (data && data.checkboxes) {
+          data.checkboxes.forEach((serverValue, index) => {
+            const input = document.createElement("input");
+
+            input.type = "checkbox";
+            input.id = `checkbox-${index}`;
+            input.checked = serverValue;
+
+            input.addEventListener("change", (event) => {
+              const checked = event.target.checked;
+              console.log("Checkbox Changed", { index, checked });
+
+              socket.emit("client:checkbox:change", { index, checked });
+              fetchStateFromServer();
+            });
+
+            container.appendChild(input);
+          });
+        }
+
+      }
+      window.addEventListener("load", async () => {
+        fetchStateFromServer();
+      });
+    </script>
+  </body>
+</html>
